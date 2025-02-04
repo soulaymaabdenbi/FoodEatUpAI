@@ -3,8 +3,10 @@
     <div class="sidenav-header">
       <i class="fa fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" style="color: #DE2768 !important; padding: 0.5rem !important; margin-right: 8px;" aria-hidden="true" id="iconSidenav"></i>
       <router-link class="navbar-brand m-0" style="padding: 1.5rem 0.7rem 1.5rem 0.7rem;" :to="{name: 'Home'}">
-        <img :src="'/assets/img/logo-ct.webp'" class="navbar-brand-img h-100">
-        <span class="ms-1 font-weight-bold text-white" style="color: #2E4AFF !important;">{{$store.getters.getAppName}}</span>
+
+              <img :src="'/assets/img/foodlogo.png'" style="display: inline; width: 180px; height: 50px; margin-right: 2.5px;  font-weight: 600; font-size: 1rem; margin-left: 2.5px;">
+
+
       </router-link>
     </div>
     <hr class="horizontal light mt-0 mb-2" style="background-color: #E22D6C;">

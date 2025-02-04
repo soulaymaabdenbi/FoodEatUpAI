@@ -6,31 +6,26 @@
         <div class="row">
           <div class="col-lg-4 col-md-8 col-12 mx-auto">
             <router-link class="link" style="display: flex; align-items: center; justify-content: center; margin-top: 16px; margin-bottom: 16px;" :to="{name: 'Home'}">
-              <img :src="'/assets/img/logo-ct.webp'" style="display: inline; width: 32px; height: 32px; margin-right: 2.5px;">
-              <span id="unauthenticated_app_name" style="display: inline; text-transform: uppercase; font-weight: 600; font-size: 1rem; margin-left: 2.5px;">{{$store.getters.getAppName}}</span>
+              <img :src="'/assets/img/foodlogo.png'" style="display: inline; width: 180px; height: 50px; margin-right: 2.5px;  font-weight: 600; font-size: 1rem; margin-left: 2.5px;">
+
             </router-link>
             <div class="card z-index-0 fadeIn3 fadeInBottom" style="margin-top: 41px; margin-bottom: 16px;">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                  <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">SIGN IN</h4>
-                  <div class="row mt-3">
-                    <div class="col-2 text-center ms-auto" style="display: flex; justify-content: center;">
-                      <a class="btn btn-link px-3" style="display: flex; justify-content: center;" href="/login-with-facebook" @click.prevent="facebookLoginUser">
-                        <i class="fa fa-facebook text-white text-lg"></i>
-                      </a>
-                    </div>
-                    <div class="col-2 text-center px-1" style="display: flex; justify-content: center;">
-                      <a class="btn btn-link px-3" style="display: flex; justify-content: center;" href="/login-with-github" @click.prevent="githubLoginUser">
-                        <i class="fa fa-github text-white text-lg"></i>
-                      </a>
-                    </div>
-                    <div class="col-2 text-center me-auto" style="display: flex; justify-content: center;">
-                      <a class="btn btn-link px-3" style="display: flex; justify-content: center;" href="/login-with-google" @click.prevent="googleLoginUser">
-                        <i class="fa fa-google text-white text-lg"></i>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+  <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">SIGN IN</h4>
+  <div class="row mt-3 justify-content-center">
+    <div class="col-3 text-center" style="display: flex; justify-content: center;">
+      <a class="btn btn-link" style="display: flex; justify-content: center;" href="/login-with-github" @click.prevent="githubLoginUser">
+        <i class="fa fa-github text-white text-lg"></i>
+      </a>
+    </div>
+    <div class="col-3 text-center" style="display: flex; justify-content: center; margin-left: 3cm;">
+      <a class="btn btn-link" style="display: flex; justify-content: center;" href="/login-with-google" @click.prevent="googleLoginUser">
+        <i class="fa fa-google text-white text-lg"></i>
+      </a>
+    </div>
+  </div>
+</div>
               </div>
               <div class="card-body">
                 <Form role="form" :validation-schema="schema" @submit="loginUser" @invalid-submit="removeErrors">
@@ -88,7 +83,7 @@
     },
     setup(){
       const store = useStore()
-      const { login, facebookLogin, githubLogin, googleLogin } = auth()
+      const { login, githubLogin, googleLogin } = auth()
       onBeforeMount(
         async() => {
           const { checkAuthentication } = auth()
@@ -150,9 +145,6 @@
           }
         }, 20)
       }
-      const facebookLoginUser = async() => {
-        await facebookLogin()
-      }
       const githubLoginUser = async() => {
         await githubLogin()
       }
@@ -195,7 +187,6 @@
         schema,
         showPassword,
         loginUser,
-        facebookLoginUser,
         githubLoginUser,
         googleLoginUser,
         removeEmailError,

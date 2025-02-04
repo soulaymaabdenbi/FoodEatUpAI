@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AuthControllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
-use Image;
+use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\ThrottlesLogins;
+use App\Models\User;
+use App\Services\AuditLogService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Image;
 
 class AuthController extends Controller
 {
@@ -106,6 +108,7 @@ class AuthController extends Controller
         $auth_user = Auth::user();
         $token = $auth_user->createToken('auth_token')->plainTextToken;
         $user->sendEmailVerificationNotification();
+        AuditLogService::log('register', 'User registered');
         return response()->json([
             'type' => $auth_user->type,
             'token' => $token
@@ -130,6 +133,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
+            AuditLogService::log('login', 'User logged in');
             if($user->hasVerifiedEmail()){
                 return response()->json([
                     'type' => $user->type,
@@ -158,6 +162,7 @@ class AuthController extends Controller
         $user = Auth::user();
         $user->tokens()->delete();
         Auth::guard('web')->logoutCurrentDevice();
+        AuditLogService::log('logout', 'User logged out');
 
         return response()->json([
             'success' => true

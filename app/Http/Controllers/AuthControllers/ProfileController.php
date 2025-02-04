@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AuthControllers;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\AuditLogService;
 use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Image;
 
@@ -20,6 +22,7 @@ class ProfileController extends Controller
         if (Hash::check($request->current_password, $user->password)) {
             $user->email = $request->email;
             $user->save();
+            AuditLogService::log('update_email', 'User updated email');
             return response()->json([
                 'type' => $user->type,
                 'message' => 'Email successfully changed'
@@ -42,6 +45,7 @@ class ProfileController extends Controller
         if (Hash::check($request->current_password, $user->password)) {
             $user->password = bcrypt($request->password);
             $user->save();
+            AuditLogService::log('update_password', 'User updated password');
             return response()->json([
                 'type' => $user->type,
                 'message' => 'Password successfully changed'
@@ -77,6 +81,7 @@ class ProfileController extends Controller
             }
             $user->image = $url;
             $user->save();
+            AuditLogService::log('update_picture', 'User updated profile picture');
             return response()->json([
                 'type' => $user->type,
                 'message' => 'Profile Picture successfully changed'

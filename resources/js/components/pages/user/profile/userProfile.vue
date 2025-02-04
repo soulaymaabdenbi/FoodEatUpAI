@@ -39,12 +39,7 @@
                   <div class="nav-wrapper position-relative end-0">
                     <div style="display: flex; justify-content: center; align-items: center;">
                       <div class="social_tabs">
-                        <a id="facebook_tab" href="/user-profile/show-facebook-tab" class="social_tabs_links" style="background-color: #ffffff; box-shadow: 0 1px 5px 1px #ddd;" @click.prevent="switchFacebookTab">
-                          <i class="fa fa-facebook-f"></i>
-                        </a>
-                      </div>
-                      <div class="social_tabs">
-                        <a id="github_tab" href="/user-profile/show-github-tab" class="social_tabs_links" style="background-color: #F8F9FA; box-shadow: none" @click.prevent="switchGithubTab">
+                        <a id="github_tab" href="/user-profile/show-github-tab" class="social_tabs_links" style="background-color: #ffffff; box-shadow: 0 1px 5px 1px #ddd;" @click.prevent="switchGithubTab">
                           <i class="fa fa-github"></i>
                         </a>
                       </div>
@@ -54,22 +49,7 @@
                         </a>
                       </div>
                     </div>
-                    <div id="facebook_tab_contents" style="display: block;">
-                      <div style="text-align: center; margin-top: 5px; margin-bottom: 10px;">
-                        <strong>Status: </strong>
-                        <strong v-if="$store.getters.getUser.facebook_id">Connected</strong>
-                        <strong v-else>Not connected</strong>
-                      </div>
-                      <div style="text-align: center;">
-                        <button class="btn btn-outline-primary btn-sm mb-0 me-3" style="width: 200px; height: 52px; padding-top: 10px; margin: 5px !important;" type="button" @click="facebookConnectUser">
-                          Connect with Facebook
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm mb-0 me-3" style="width: 200px; height: 52px; padding-top: 10px; margin: 5px !important;" type="button" @click="facebookRemoveUser">
-                          Remove from Facebook
-                        </button>
-                      </div>
-                    </div>
-                    <div id="github_tab_contents" style="display: none;">
+                    <div id="github_tab_contents" style="display: block;">
                       <div style="text-align: center; margin-top: 5px; margin-bottom: 10px;">
                         <strong>Status: </strong>
                         <strong v-if="$store.getters.getUser.github_id">Connected</strong>
@@ -123,7 +103,7 @@
     },
     setup(){
       const store = useStore()
-      const { facebookConnect, facebookRemove, githubConnect, githubRemove, googleConnect, googleRemove } = profile()
+      const { githubConnect, githubRemove, googleConnect, googleRemove } = profile()
       onBeforeMount(
         async() => {
           const { checkAuthentication, authUser } = profile()
@@ -139,24 +119,7 @@
           useToggleSidebar()
         }
       )
-      const switchFacebookTab = async() => {
-        document.getElementById('github_tab').style.backgroundColor = '#F8F9FA'
-        document.getElementById('github_tab').style.boxShadow = 'none'
-        document.getElementById('github_tab_contents').style.display = 'none'
-
-        document.getElementById('google_tab').style.backgroundColor = '#F8F9FA'
-        document.getElementById('google_tab').style.boxShadow = 'none'
-        document.getElementById('google_tab_contents').style.display = 'none'
-
-        document.getElementById('facebook_tab').style.backgroundColor = '#ffffff'
-        document.getElementById('facebook_tab').style.boxShadow = '0 1px 5px 1px #ddd'
-        document.getElementById('facebook_tab_contents').style.display = 'block'
-      }
       const switchGithubTab = async() => {
-        document.getElementById('facebook_tab').style.backgroundColor = '#F8F9FA'
-        document.getElementById('facebook_tab').style.boxShadow = 'none'
-        document.getElementById('facebook_tab_contents').style.display = 'none'
-
         document.getElementById('google_tab').style.backgroundColor = '#F8F9FA'
         document.getElementById('google_tab').style.boxShadow = 'none'
         document.getElementById('google_tab_contents').style.display = 'none'
@@ -166,10 +129,6 @@
         document.getElementById('github_tab_contents').style.display = 'block'
       }
       const switchGoogleTab = async() => {
-        document.getElementById('facebook_tab').style.backgroundColor = '#F8F9FA'
-        document.getElementById('facebook_tab').style.boxShadow = 'none'
-        document.getElementById('facebook_tab_contents').style.display = 'none'
-
         document.getElementById('github_tab').style.backgroundColor = '#F8F9FA'
         document.getElementById('github_tab').style.boxShadow = 'none'
         document.getElementById('github_tab_contents').style.display = 'none'
@@ -177,14 +136,6 @@
         document.getElementById('google_tab').style.backgroundColor = '#ffffff'
         document.getElementById('google_tab').style.boxShadow = '0 1px 5px 1px #ddd'
         document.getElementById('google_tab_contents').style.display = 'block'
-      }
-      const facebookConnectUser = async() => {
-        const type_profile = 'user-profile'
-        await facebookConnect(type_profile)
-      }
-      const facebookRemoveUser = async() => {
-        const type_profile = 'user-profile'
-        await facebookRemove(type_profile)
       }
       const githubConnectUser = async() => {
         const type_profile = 'user-profile'
@@ -214,11 +165,8 @@
         }
       )
       return{
-        switchFacebookTab,
         switchGithubTab,
         switchGoogleTab,
-        facebookConnectUser,
-        facebookRemoveUser,
         githubConnectUser,
         githubRemoveUser,
         googleConnectUser,

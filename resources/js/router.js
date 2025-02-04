@@ -1,4 +1,4 @@
-import {createWebHistory, createRouter} from 'vue-router';
+import { createWebHistory, createRouter } from 'vue-router';
 import store from './store.js';
 import redirectToHome from './components/pages/redirectToHome.vue';
 import login from './components/pages/auth/login.vue';
@@ -30,6 +30,7 @@ import proChangeEmail from './components/pages/pro/profile/changeEmail.vue';
 import proChangePassword from './components/pages/pro/profile/changePassword.vue';
 import proChangePicture from './components/pages/pro/profile/changePicture.vue';
 import pageNotFound from './components/pages/errors/404.vue';
+import UserList from "@/components/pages/admin/UserList/UserList.vue";
 
 const routes = [
 	{
@@ -142,18 +143,7 @@ const routes = [
 			isPro: undefined
 		}
 	},
-	{
-		path: '/api/auth/facebook-callback',
-		name: 'facebook',
-		component: facebook,
-		meta: {
-			requiresAuth: undefined,
-			isVerified: undefined,
-			isAdmin: undefined,
-			isUser: undefined,
-			isPro: undefined
-		}
-	},
+
 	{
 		path: '/api/auth/github-callback',
 		name: 'github',
@@ -182,6 +172,18 @@ const routes = [
 		path: '/admin-home',
 		name: 'adminDashboard',
 		component: adminHome,
+		meta: {
+			requiresAuth: true,
+			isVerified: true,
+			isAdmin: true,
+			isUser: false,
+			isPro: false
+		}
+	},
+	{
+		path: '/admin-users',
+		name: 'adminUsers',
+		component: UserList,
 		meta: {
 			requiresAuth: true,
 			isVerified: true,
