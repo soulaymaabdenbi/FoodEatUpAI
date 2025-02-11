@@ -21,12 +21,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'phone' => 'nullable|string|max:255',
+            'type' => 'required|string|in:Admin,User,Pro', // Add this validation
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'phone' => $validated['phone'] ?? null,
+            'type' => $validated['type'], // Make sure this is included
         ]);
 
         return response()->json($user, 201);
@@ -67,10 +71,28 @@ class UserController extends Controller
 
     public function toggleStatus($id)
     {
-        $user = User::findOrFail($id);
-        $user->active = !$user->active;
-        $user->save();
+        try {
+            $user = User::findOrFail($id);
 
-        return response()->json($user);
+            // Don't allow toggling the authenticated user's status
+            if ($user->id === auth()->id()) {
+                return response()->json([
+                    'message' => 'You cannot change your own status'
+                ], 403);
+            }
+
+            $user->active = !$user->active;
+            $user->save();
+
+            return response()->json([
+                'message' => 'User status updated successfully',
+                'active' => $user->active
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating user status',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

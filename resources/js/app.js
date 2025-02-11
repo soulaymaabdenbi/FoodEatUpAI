@@ -1,5 +1,7 @@
 import './bootstrap';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'toastr/build/toastr.min.css';
 import {createApp} from 'vue';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -10,7 +12,7 @@ import 'dropify/dist/css/dropify.min.css';
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import index from './components/index.vue';
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 toastr.options.newestOnTop = true
 toastr.options.closeButton = true
 toastr.options.timeOut = 5000

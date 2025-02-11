@@ -68,6 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ]);
     });
 
+
     Route::post('/verify-email/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware('signed');
     Route::post('/resend-verify-email', [VerificationController::class, 'resend']);
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'facebook_id',
         'github_id',
         'google_id',
+        'active',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active' => 'boolean',
     ];
 
     public function sendEmailVerificationNotification()

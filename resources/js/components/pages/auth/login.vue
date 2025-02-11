@@ -13,18 +13,23 @@
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
   <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">SIGN IN</h4>
-  <div class="row mt-3 justify-content-center">
-    <div class="col-3 text-center" style="display: flex; justify-content: center;">
-      <a class="btn btn-link" style="display: flex; justify-content: center;" href="/login-with-github" @click.prevent="githubLoginUser">
-        <i class="fa fa-github text-white text-lg"></i>
-      </a>
-    </div>
-    <div class="col-3 text-center" style="display: flex; justify-content: center; margin-left: 3cm;">
-      <a class="btn btn-link" style="display: flex; justify-content: center;" href="/login-with-google" @click.prevent="googleLoginUser">
-        <i class="fa fa-google text-white text-lg"></i>
-      </a>
-    </div>
-  </div>
+                  <div class="row mt-3 justify-content-center">
+                    <div class="col-12 text-center">
+                      <div class="social-login-buttons">
+                        <!-- GitHub Login Button -->
+                        <a class="btn btn-github" href="/login-with-github" @click.prevent="githubLoginUser">
+                          <i class="fab fa-github"></i>
+                          <span>Login with GitHub</span>
+                        </a>
+
+                        <!-- Google Login Button -->
+                        <a class="btn btn-google" href="/login-with-google" @click.prevent="googleLoginUser">
+                          <i class="fab fa-google"></i>
+                          <span>Login with Google</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
 </div>
               </div>
               <div class="card-body">
@@ -68,6 +73,102 @@
     </div>
   </main>
 </template>
+<style scoped>
+.social-login-buttons {
+display: flex;
+justify-content: center;
+gap: 20px;
+margin-top: 20px;
+}
+
+.btn-github,
+.btn-google {
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 10px 20px;
+border-radius: 8px;
+color: white;
+font-weight: 500;
+transition: all 0.3s ease;
+width: 200px;
+border: none;
+}
+
+.btn-github {
+background-color: #24292e;
+}
+
+.btn-google {
+background-color: #24292e;
+}
+
+.btn-github:hover {
+background-color: #2f363d;
+transform: translateY(-2px);
+box-shadow: 0 4px 6px rgba(36, 41, 46, 0.2);
+}
+
+.btn-google:hover {
+background-color: #2f363d;
+transform: translateY(-2px);
+box-shadow: 0 4px 6px rgba(36, 41, 46, 0.2);
+}
+
+.btn-github i,
+.btn-google i {
+font-size: 20px;
+margin-right: 10px;
+}
+
+.btn-github span,
+.btn-google span {
+font-size: 14px;
+}
+
+/* Animation for button press */
+.btn-github:active,
+.btn-google:active {
+transform: translateY(0);
+box-shadow: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+.social-login-buttons {
+flex-direction: column;
+align-items: center;
+}
+
+.btn-github,
+.btn-google {
+width: 100%;
+max-width: 250px;
+}
+}
+
+/* Optional: Add loading state */
+.btn-github.loading,
+.btn-google.loading {
+opacity: 0.8;
+cursor: not-allowed;
+}
+
+.btn-github.loading i,
+.btn-google.loading i {
+animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+from {
+transform: rotate(0deg);
+}
+to {
+transform: rotate(360deg);
+}
+}
+</style>
+
 <script>
   import { onBeforeMount, onMounted, onUnmounted } from 'vue';
   import { Form, Field, ErrorMessage } from 'vee-validate';
@@ -196,3 +297,4 @@
     }
   }
 </script>
+

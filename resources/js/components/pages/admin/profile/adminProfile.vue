@@ -39,18 +39,13 @@
                   <div class="nav-wrapper position-relative end-0">
                     <div style="display: flex; justify-content: center; align-items: center;">
                       <div class="social_tabs">
-                        <a id="facebook_tab" href="/admin-profile/show-facebook-tab" class="social_tabs_links" style="background-color: #ffffff; box-shadow: 0 1px 5px 1px #ddd;" @click.prevent="switchFacebookTab">
-                          <i class="fa fa-facebook-f"></i>
-                        </a>
-                      </div>
-                      <div class="social_tabs">
                         <a id="github_tab" href="/admin-profile/show-github-tab" class="social_tabs_links" style="background-color: #F8F9FA; box-shadow: none" @click.prevent="switchGithubTab">
-                          <i class="fa fa-github"></i>
+                          <i class="fab fa-github"></i> <!-- Updated class -->
                         </a>
                       </div>
                       <div class="social_tabs">
                         <a id="google_tab" href="/admin-profile/show-google-tab" class="social_tabs_links" style="background-color: #F8F9FA; box-shadow: none;" @click.prevent="switchGoogleTab">
-                          <i class="fa fa-google"></i>
+                          <i class="fab fa-google"></i> <!-- Updated class -->
                         </a>
                       </div>
                     </div>
