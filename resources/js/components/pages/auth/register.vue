@@ -1,249 +1,336 @@
 <template>
-  <main class="main-content position-relative max-height-vh-100  mt-0">
-    <div class="loader" style="display: none;"></div>
-    <section>
-      <div id="page_header" class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('/assets/img/illustrations/signup.webp'); background-size: cover;">
-              </div>
-            </div>
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
-              <router-link class="link-2" style="display: flex; align-items: center; justify-content: center; margin-top: 16px; margin-bottom: 16px;" :to="{name: 'Home'}">
-                <img :src="'/assets/img/logo-ct.webp'" style="display: inline; width: 32px; height: 32px; margin-right: 2.5px;">
-                <span id="unauthenticated_app_name" style="display: inline; text-transform: uppercase; font-weight: 600; font-size: 1rem; margin-left: 2.5px;">{{$store.getters.getAppName}}</span>
-              </router-link>
-              <div class="card card-plain" style="background-color: white; box-shadow: 0 0 20px 2px rgb(0 0 0 / 10%); margin-top: 25px; margin-bottom: 16px;">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                  <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0" style="margin-top: 0 !important;">USER SIGN UP</h4>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <Form role="form" :validation-schema="schema" @submit="registerUser" @invalid-submit="removeErrors">
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="name">Name</label>
-                      <Field id="name" name="name" type="text" class="form-control" @blur="showNameError" />
-                      <ErrorMessage id="name_error" class="error" name="name" />
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="email">Email</label>
-                      <Field id="email" name="email" type="text" class="form-control" @blur="removeEmailError" />
-                      <ErrorMessage id="email_error" class="error" name="email" />
-                      <span id="email_error_2" class="error" role="alert">{{$store.getters.getEmailError}}</span>
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label for="image">Profile Picture</label>
-                      <Field id="image" type="file" class="dropify" data-height="100" name="image" tabindex="-1" />
-                      <span class="error" role="alert">{{$store.getters.getImageError}}</span>
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="password">Password</label>
-                      <Field id="password" name="password" type="password" class="form-control" @blur="removePasswordError" />
-                      <ErrorMessage id="password_error" class="error" name="password" />
-                      <span id="password_error_2" class="error" role="alert">{{$store.getters.getPasswordError}}</span>
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="password-confirm">Confirm Password</label>
-                      <Field id="password-confirm" name="password_confirmation" type="password" class="form-control" />
-                    </div>
-                    <div class="form-check form-switch d-flex align-items-center mb-3">
-                      <input class="form-check-input" type="checkbox" id="showpass" @click="showPassword">
-                      <label class="form-check-label mb-0 ms-3" style="padding-top: 5px;" for="showpass">Show Password</label>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
-                    </div>
-                  </Form>
-                </div>
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  <p class="mb-2 text-sm mx-auto">
-                    Already have an account?
-                    <router-link class="text-primary text-gradient font-weight-bold" :to="{name: 'Login'}">SIGN IN</router-link>
-                  </p>
-                  <p class="mb-2 text-sm mx-auto">
-                    Register as a
-                    <router-link class="text-primary text-gradient font-weight-bold" :to="{name: 'proRegister'}">PRO USER</router-link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="auth-container">
+    <!-- Mobile menu button - only visible on mobile -->
+    <div class="mobile-nav">
+      <router-link to="/" class="logo">FOOdEatUp</router-link>
+      <div class="nav-buttons">
+        <router-link :to="{name: 'Register'}" custom v-slot="{ navigate }">
+          <button
+              class="btn-primary"
+              :class="{ 'active': $route.name === 'Register' }"
+              @click="navigate"
+          >
+            Inscription
+          </button>
+        </router-link>
+        <router-link :to="{name: 'login'}" custom v-slot="{ navigate }">
+          <button
+              class="btn-secondary"
+              :class="{ 'active': $route.name === 'login' }"
+              @click="navigate"
+          >
+            Connexion
+          </button>
+        </router-link>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+      <!-- Left side -->
+      <div class="left-side">
+        <router-link to="/" class="logo desktop-only">FOOdEatUp</router-link>
+
+        <div class="hero-content">
+          <h1>Lorem ipsum dolor sit amet,</h1>
+          <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <button class="btn-action">Voir plus</button>
         </div>
       </div>
-    </section>
-  </main>
+
+      <!-- Right side -->
+      <div class="right-side">
+        <!-- Top navigation - desktop only -->
+        <div class="nav-buttons desktop-only">
+          <router-link :to="{name: 'Register'}" custom v-slot="{ navigate }">
+            <button
+                class="btn-primary"
+                :class="{ 'active': $route.name === 'Register' }"
+                @click="navigate"
+            >
+              Inscription
+            </button>
+          </router-link>
+          <router-link :to="{name: 'login'}" custom v-slot="{ navigate }">
+            <button
+                class="btn-secondary"
+                :class="{ 'active': $route.name === 'login' }"
+                @click="navigate"
+            >
+              Connexion
+            </button>
+          </router-link>
+        </div>
+
+        <!-- Registration form -->
+        <div class="auth-form">
+          <div class="g-icon">
+            <span>G</span>
+          </div>
+
+          <h2>Créer un nouveau compte</h2>
+
+          <Form @submit="registerUser" :validation-schema="schema" @invalid-submit="removeErrors">
+            <div class="name-fields">
+              <div class="form-group">
+                <label>Nom</label>
+                <Field
+                    name="Name"
+                    type="text"
+                    placeholder="Nom"
+                    @blur="showNameError"
+                />
+                <ErrorMessage name="Name" class="error-message" />
+              </div>
+
+            </div>
+
+            <div class="form-group">
+              <label>Adresse email</label>
+              <Field
+                  name="email"
+                  type="email"
+                  placeholder="Adresse email"
+                  @blur="removeEmailError"
+              />
+              <ErrorMessage name="email" class="error-message" />
+              <span v-if="$store.getters.getEmailError" class="error-message">
+                {{$store.getters.getEmailError}}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label>Mot de Passe</label>
+              <div class="password-field">
+                <Field
+                    name="password"
+                    :type="showPasswordField ? 'text' : 'password'"
+                    placeholder="**********"
+                    @blur="removePasswordError"
+                />
+                <button
+                    type="button"
+                    @click="togglePassword"
+                    class="toggle-password"
+                    aria-label="Toggle password visibility"
+                >
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.98766 3.54017C8.6198 3.37311 9.2911 3.27778 10 3.27778C15.7273 3.27778 19 9.5 19 9.5C19 9.5 18.2539 10.9185 16.8508 12.4009M3.1142 6.6362C1.73368 8.1051 1 9.5 1 9.5C1 9.5 4.27273 15.7222 10 15.7222C10.7219 15.7222 11.4047 15.6234 12.047 15.4506M9.55 12.1298C8.57424 11.9681 7.77595 11.2895 7.45364 10.3889M10.45 6.8702C11.5806 7.05755 12.473 7.93889 12.6627 9.05556M1.9 1.5L18.1 17.5"
+                          stroke="#C4BEB8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <ErrorMessage name="password" class="error-message" />
+            </div>
+
+            <div class="form-group">
+              <label>Confirmer le mot de passe</label>
+              <div class="password-field">
+                <Field
+                    name="password_confirmation"
+                    :type="showPasswordField ? 'text' : 'password'"
+                    placeholder="**********"
+                />
+                <button
+                    type="button"
+                    @click="togglePassword"
+                    class="toggle-password"
+                    aria-label="Toggle password visibility"
+                >
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.98766 3.54017C8.6198 3.37311 9.2911 3.27778 10 3.27778C15.7273 3.27778 19 9.5 19 9.5C19 9.5 18.2539 10.9185 16.8508 12.4009M3.1142 6.6362C1.73368 8.1051 1 9.5 1 9.5C1 9.5 4.27273 15.7222 10 15.7222C10.7219 15.7222 11.4047 15.6234 12.047 15.4506M9.55 12.1298C8.57424 11.9681 7.77595 11.2895 7.45364 10.3889M10.45 6.8702C11.5806 7.05755 12.473 7.93889 12.6627 9.05556M1.9 1.5L18.1 17.5"
+                          stroke="#C4BEB8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="terms">
+              <p>En vous inscrivant, vous acceptez les conditions d'utilisation et la politique de confidentialité de FoodEatUp</p>
+            </div>
+
+            <button
+                type="submit"
+                class="btn-submit"
+                :disabled="isLoading"
+                :class="{ 'loading': isLoading }"
+            >
+              {{ isLoading ? 'Inscription...' : 'S\'inscrire' }}
+            </button>
+          </Form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-  import { onBeforeMount, onMounted, onUnmounted } from 'vue';
-  import { Form, Field, ErrorMessage } from 'vee-validate';
-  import * as yup from 'yup';
-  import $ from 'jquery';
-  import { useStore } from 'vuex';
-  import materialDashboard from '../../../../js/materialDashboard';
-  import auth from '../../../../js/composables/auth';
-  export default{
-    components: {
-      Form,
-      Field,
-      ErrorMessage
-    },
-    setup(){
-      const store = useStore()
-      const { register } = auth()
-      onBeforeMount(
-        async() => {
-          const { checkAuthentication } = auth()
-          await checkAuthentication()
-        }
-      )
-      onMounted(
-        async() => {
-          const { backgroundImage, usePerfectScrollbar, useInput } = materialDashboard()
-          backgroundImage()
-          usePerfectScrollbar()
-          useInput()
-          $('.dropify').dropify({
-            tpl: {
-              wrap: '<div id="dropify-wrapper" class="dropify-wrapper"></div>'
-            },
-            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
-          });
+import { ref, onUnmounted } from 'vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { useStore } from 'vuex';
+import {useRoute, useRouter} from 'vue-router';
 
-          if('ontouchstart' in window) {
-            document.getElementById('dropify-wrapper').classList.remove('touch-fallback')
+import auth from '@/composables/auth';
+
+
+export default {
+  name: 'Register',
+  components: {
+    Form,
+    Field,
+    ErrorMessage
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
+    const { register } = auth();
+    const showPasswordField = ref(false);
+    const isLoading = ref(false);
+    console.log('Component Route:', route);
+    console.log('Router:', router);
+    console.log('Available Routes:', router.getRoutes().map(r => r.name));
+    const schema = yup.object({
+      firstName: yup.string()
+          .required('Le prénom est requis.')
+          .max(255, 'Le prénom ne doit pas dépasser 255 caractères.'),
+      lastName: yup.string()
+          .required('Le nom est requis.')
+          .max(255, 'Le nom ne doit pas dépasser 255 caractères.'),
+      email: yup.string()
+          .required('L\'email est requis.')
+          .email('L\'email doit être une adresse email valide.')
+          .max(255, 'L\'email ne doit pas dépasser 255 caractères.'),
+      password: yup.string()
+          .required('Le mot de passe est requis.')
+          .min(8, 'Le mot de passe doit contenir au moins 8 caractères.'),
+      password_confirmation: yup.string()
+          .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre.')
+    });
+
+    const togglePassword = () => {
+      showPasswordField.value = !showPasswordField.value;
+    };
+
+    const registerUser = async (values, { resetForm }) => {
+      try {
+        isLoading.value = true;
+
+        // Prepare form data for multipart/form-data
+        const formData = new FormData();
+        formData.append('Name', values.name);
+        formData.append('email', values.email);
+        formData.append('password', values.password);
+        formData.append('password_confirmation', values.password_confirmation);
+
+        // Optional: Add image upload if you have file input
+        const imageInput = document.getElementById('image');
+        if (imageInput && imageInput.files.length > 0) {
+          formData.append('image', imageInput.files[0]);
+        }
+
+        const response = await axios.post('/api/register', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        // Show success message
+        toastr.success('Inscription réussie. Veuillez vous connecter.');
+
+        // Reset form and navigate to login
+        resetForm();
+        router.push({ name: 'login' });
+
+      } catch (error) {
+        // Handle specific error scenarios
+        if (error.response && error.response.status === 422) {
+          const errors = error.response.data.errors;
+
+          // Handle validation errors
+          if (errors.email) {
+            store.dispatch('setEmailError', errors.email[0]);
+          }
+          if (errors.password) {
+            store.dispatch('setPasswordError', errors.password[0]);
           }
 
-          document.getElementById('image').setAttribute('title', '')
-        }
-      )
-      const schema = yup.object({
-        name: yup.string().required('The name field is required.').typeError('The name must be a string.').max(255, 'The name must not be greater than 255 characters.'),
-        email: yup.string().required('The email field is required.').typeError('The email must be a string.').email('The email must be a valid email address.').max(255, 'The email must not be greater than 255 characters.'),
-        password: yup.string().required('The password field is required.').typeError('The password must be a string.').min(8, 'The password must be at least 8 characters.')
-      })
-      const showPassword = async() => {
-        var x = document.getElementById("password")
-        if (x.type === "password") {
-          x.type = "text"
+          // You can add more specific error handling for other fields
+          toastr.error('Erreur d\'inscription. Veuillez vérifier vos informations.');
         } else {
-          x.type = "password"
+          toastr.error('Une erreur est survenue. Veuillez réessayer.');
         }
-        var y = document.getElementById("password-confirm")
-        if (y.type === "password") {
-          y.type = "text"
-        } else {
-          y.type = "password"
-        }
+
+        console.error('Registration error:', error);
+      } finally {
+        isLoading.value = false;
       }
-      const registerUser = async (values, { resetForm }) => {
-        await register(values)
-        $('.dropify-clear').click()
-        resetForm({
-          values: {
-            name: undefined,
-            email: undefined,
-            image: document.getElementById('image').files[0],
-            password: undefined,
-            password_confirmation: undefined
-          }
-        })
-        let input_divs = await document.getElementsByClassName('input-group')
-        for (let i = 0; i < input_divs.length; i++) {
-          if(input_divs[i].classList.contains('is-filled')){
-            input_divs[i].classList.remove('is-filled')
-          }
-        }
-        let inputs = await document.getElementsByClassName('form-control')
-        for (let i = 0; i < inputs.length; i++) {
-          inputs[i].blur()
-        }
-        setTimeout(async() => {
-          let name_error = document.getElementById('name_error')
-          if(name_error){
-            name_error.style.display = 'none'
-          }
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'none'
-          }
-          let password_error = document.getElementById('password_error')
-          if(password_error){
-            password_error.style.display = 'none'
-          }
-        }, 15)
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'block'
-          }
-          let password_error_2 = document.getElementById('password_error_2')
-          if(password_error_2){
-            password_error_2.style.display = 'block'
-          }
-        }, 20)
-      }
-      const showNameError = async() => {
-        setTimeout(async() => {
-          let name_error = document.getElementById('name_error')
-          if(name_error){
-            name_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removeEmailError = async() => {
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'none'
-          }
-        }, 10)
-        setTimeout(async() => {
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removePasswordError = async() => {
-        setTimeout(async() => {
-          let password_error_2 = document.getElementById('password_error_2')
-          if(password_error_2){
-            password_error_2.style.display = 'none'
-          }
-        }, 10)
-        setTimeout(async() => {
-          let password_error = document.getElementById('password_error')
-          if(password_error){
-            password_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removeErrors = async() => {
-        store.dispatch('removeEmailError')
-        store.dispatch('removeImageError')
-        store.dispatch('removePasswordError')
-        await showNameError()
-        await removeEmailError()
-        await removePasswordError()
-      }
-      onUnmounted(
-        async() => {
-          store.dispatch('removeEmailError')
-          store.dispatch('removeImageError')
-          store.dispatch('removePasswordError')
-        }
-      )
-      return{
-        schema,
-        showPassword,
-        registerUser,
-        showNameError,
-        removeEmailError,
-        removePasswordError,
-        removeErrors
-      }
-    }
+    };
+    const removeEmailError = () => {
+      store.dispatch('removeEmailError');
+    };
+
+    const removePasswordError = () => {
+      store.dispatch('removePasswordError');
+    };
+
+    const removeErrors = () => {
+      store.dispatch('removeEmailError');
+      store.dispatch('removePasswordError');
+    };
+
+    onUnmounted(() => {
+      store.dispatch('removeEmailError');
+      store.dispatch('removePasswordError');
+    });
+
+    return {
+      schema,
+      showPasswordField,
+      isLoading,
+      togglePassword,
+      registerUser,
+      removeEmailError,
+      removePasswordError,
+      removeErrors
+    };
   }
+};
 </script>
+
+<style>
+@import '/resources/css/auth.css';
+
+/* Additional styles specific to register form */
+.name-fields {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.name-fields .form-group {
+  flex: 1;
+}
+
+.terms {
+  margin-bottom: 28px;
+}
+
+.terms p {
+  color: #7F7F7F;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+@media (max-width: 768px) {
+  .name-fields {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .terms p {
+    font-size: 12px;
+  }
+}
+</style>

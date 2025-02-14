@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthControllers\ProfileController;
 use App\Http\Controllers\AuthControllers\ResetPasswordController;
 use App\Http\Controllers\AuthControllers\SocialiteController;
 use App\Http\Controllers\AuthControllers\VerificationController;
+use App\Http\Controllers\EstablishmentController;
 use App\Http\Controllers\UserManagementControllers\UserController;
 use App\Http\Controllers\UserManagementControllers\RoleController;
 use App\Http\Controllers\UserManagementControllers\PermissionController;
@@ -55,7 +56,7 @@ Route::middleware(['auth:sanctum', 'verifiedEmail'])->group(function(){
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/check-authentication', function (Request $request) {
+    /*Route::get('/check-authentication', function (Request $request) {
         $user = $request->user();
         $type = $user->type;
         $verified = $user->hasVerifiedEmail();
@@ -67,9 +68,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'token' => $token
         ]);
     });
+*/
 
-
-    Route::post('/verify-email/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware('signed');
+   // Route::post('/verify-email/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware('signed');
     Route::post('/resend-verify-email', [VerificationController::class, 'resend']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
@@ -84,3 +85,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
 });
+    // 🔹 **Establishments Management**
+    Route::prefix('establishments')->group(function () {
+        Route::get('/', [EstablishmentController::class, 'index']); // List
+        Route::post('/', [EstablishmentController::class, 'store']); // Create
+        Route::get('/{id}', [EstablishmentController::class, 'show']); // View
+        Route::patch('/{id}', [EstablishmentController::class, 'update']); // Update
+        Route::get('cities/{country}', [EstablishmentController::class, 'getCitiesByCountry']);
+        Route::delete('/{id}', [EstablishmentController::class, 'destroy']); // Delete
+    });
+
+

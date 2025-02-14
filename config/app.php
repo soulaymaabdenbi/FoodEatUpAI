@@ -198,7 +198,9 @@ return [
         /*
          * Image Intervention Provider...
          */
+
         Intervention\Image\ImageServiceProvider::class,
+
 
     ],
 

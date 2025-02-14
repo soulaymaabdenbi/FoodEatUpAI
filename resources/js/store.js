@@ -7,8 +7,8 @@ const store = createStore({
 		phoneError: null,
 		imageError: null,
 		passwordError: null,
-		token: localStorage.getItem('token') || 0,
-		verified: localStorage.getItem('verified') || 0,
+		token: parseInt(localStorage.getItem('token')) || 0,  // Convert to number
+		verified: parseInt(localStorage.getItem('verified')) || 0,
 		message: null,
 		type: localStorage.getItem('type') || 'Unset',
 		user: {},
@@ -29,11 +29,11 @@ const store = createStore({
 		updatePasswordError(state, payload){
 			state.passwordError = payload
 		},
-		updateToken(state, payload){
-			state.token = payload
+		updateToken(state, payload) {
+			state.token = parseInt(payload) || 0;  // Ensure number
 		},
-		updateVerified(state, payload){
-			state.verified = payload
+		updateVerified(state, payload) {
+			state.verified = parseInt(payload) || 0;  // Ensure number
 		},
 		updateMessage(state, payload){
 			state.message = payload
@@ -79,17 +79,19 @@ const store = createStore({
 		removePasswordError(context){
 			context.commit('updatePasswordError', null)
 		},
-		setToken(context, payload){
-			localStorage.setItem('token', payload)
-			context.commit('updateToken', payload)
+		setToken(context, payload) {
+			const tokenValue = parseInt(payload) || 0;
+			localStorage.setItem('token', tokenValue.toString());
+			context.commit('updateToken', tokenValue);
+		},
+		setVerified(context, payload) {
+			const verifiedValue = parseInt(payload) || 0;
+			localStorage.setItem('verified', verifiedValue.toString());
+			context.commit('updateVerified', verifiedValue);
 		},
 		removeToken(context){
 			localStorage.removeItem('token')
 			context.commit('updateToken', 0)
-		},
-		setVerified(context, payload){
-			localStorage.setItem('verified', payload)
-			context.commit('updateVerified', payload)
 		},
 		removeVerified(context){
 			localStorage.removeItem('verified')

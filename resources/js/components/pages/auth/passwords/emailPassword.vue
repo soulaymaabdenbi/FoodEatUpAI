@@ -1,142 +1,230 @@
 <template>
-  <main class="main-content position-relative max-height-vh-100  mt-0">
-    <div class="loader" style="display: none;"></div>
-    <section>
-      <div id="page_header" class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('/assets/img/illustrations/signup.webp'); background-size: cover;">
-              </div>
-            </div>
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
-              <router-link class="link-2" style="display: flex; align-items: center; justify-content: center; margin-top: 16px; margin-bottom: 16px;" :to="{name: 'Home'}">
-                <img :src="'/assets/img/logo-ct.webp'" style="display: inline; width: 32px; height: 32px; margin-right: 2.5px;">
-                <span id="unauthenticated_app_name" style="display: inline; text-transform: uppercase; font-weight: 600; font-size: 1rem; margin-left: 2.5px;">{{$store.getters.getAppName}}</span>
-              </router-link>
-              <div class="card card-plain" style="background-color: white; box-shadow: 0 0 20px 2px rgb(0 0 0 / 10%); margin-top: 25px; margin-bottom: 16px;">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                  <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0" style="margin-top: 0 !important;">RESET PASSWORD</h4>
-                  </div>
-                </div>
-                <div class="card-body">
-                  {{$store.getters.getMessage}}
-                  <Form role="form" :validation-schema="schema" @submit="sendResetLink" @invalid-submit="removeErrors">
-                    <div id="input_div" class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="email">Email</label>
-                      <Field id="email" name="email" type="text" class="form-control" @blur="removeEmailError" />
-                      <ErrorMessage id="email_error" class="error" name="email" />
-                      <span id="email_error_2" class="error" role="alert">{{$store.getters.getEmailError}}</span>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Send Link</button>
-                    </div>
-                  </Form>
-                </div>
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  <p class="mb-2 text-sm mx-auto">
-                    Already have an account?
-                    <router-link class="text-primary text-gradient font-weight-bold" :to="{name: 'Login'}">SIGN IN</router-link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="auth-container">
+    <div class="mobile-nav">
+      <router-link to="/" class="logo">FOOdEatUp</router-link>
+    </div>
+
+    <div class="main-content">
+      <!-- Left side -->
+      <div class="left-side">
+        <router-link to="/" class="logo desktop-only">FOOdEatUp</router-link>
+
+        <div class="hero-content">
+          <h1>Lorem ipsum dolor sit amet,</h1>
+          <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <button class="btn-action">Voir plus</button>
         </div>
       </div>
-    </section>
-  </main>
+
+      <!-- Right side -->
+      <div class="right-side">
+        <div class="auth-form">
+          <!-- G Icon -->
+          <div class="g-icon">
+            <span>G</span>
+          </div>
+
+          <!-- Title and Description -->
+          <div class="reset-header">
+            <h2>Mot de passe oublié</h2>
+            <p class="reset-description">
+              Nous vous enverrons un email de confirmation. Ouvrez-le<br>
+              et cliquez sur le lien pour réinitialiser votre mot de passe
+            </p>
+          </div>
+
+          <!-- Form -->
+          <Form @submit="sendResetLink" :validation-schema="schema" @invalid-submit="removeErrors">
+            <div class="form-group">
+              <label>Adresse email</label>
+              <Field
+                  name="email"
+                  type="email"
+                  placeholder="Adresse email"
+                  v-model="email"
+                  @blur="removeEmailError"
+              />
+              <ErrorMessage name="email" class="error-message" />
+              <span v-if="emailError" class="error-message">
+                {{ emailError }}
+              </span>
+            </div>
+
+            <button
+                type="submit"
+                class="btn-submit"
+                :disabled="isLoading"
+                :class="{ 'loading': isLoading }"
+            >
+              {{ isLoading ? 'Envoi en cours...' : 'Envoyer le lien' }}
+            </button>
+
+            <div class="support-text">
+              Besoin d'aide ? Contactez notre <strong>support</strong> à tout moment !
+            </div>
+          </Form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-	import { onBeforeMount, onMounted, onUnmounted } from 'vue';
-  import { Form, Field, ErrorMessage } from 'vee-validate';
-  import * as yup from 'yup';
-  import { useStore } from 'vuex';
-  import materialDashboard from "../../../../../js/materialDashboard";
-  import auth from '../../../../../js/composables/auth';
-  export default{
-    components: {
-      Form,
-      Field,
-      ErrorMessage
-    },
-    setup(){
-      const store = useStore()
-      const { resetLink } = auth()
-      onBeforeMount(
-        async() => {
-          const { checkAuthenticationOnResetPassword } = auth()
-          await checkAuthenticationOnResetPassword()
+import { ref, computed, onBeforeMount, onUnmounted } from 'vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+export default {
+  name: 'EmailPasswordView',
+  components: {
+    Form,
+    Field,
+    ErrorMessage
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const isLoading = ref(false);
+    const email = ref('');
+    const emailError = ref('');
+
+    const schema = yup.object({
+      email: yup.string()
+          .required('L\'email est requis.')
+          .email('L\'email doit être une adresse email valide.')
+          .max(255, 'L\'email ne doit pas dépasser 255 caractères.')
+    });
+    const userEmail = computed(() => {
+      return localStorage.getItem('resetEmail') || 'votre adresse email';
+    });
+
+    onBeforeMount(async () => {
+      // Clear any existing errors
+      emailError.value = '';
+    });
+
+    const sendResetLink = async (values) => {
+      try {
+        isLoading.value = true;
+        emailError.value = '';
+
+        // Appel API pour envoyer le lien de réinitialisation
+        const response = await axios.post('/api/reset-password', {
+          email: values.email
+        });
+
+        if (response.data.message) {
+          // Stocker l'email dans localStorage
+          localStorage.setItem('resetEmail', values.email);
+
+          // Redirection vers la page de vérification sans paramètre
+          router.push({ name: 'verifyEmail' });
         }
-      )
-      onMounted(
-        async() => {
-          const { backgroundImage, usePerfectScrollbar, useInput } = materialDashboard()
-          backgroundImage()
-          usePerfectScrollbar()
-          useInput()
-        }
-      )
-      const schema = yup.object({
-        email: yup.string().required('The email field is required.').typeError('The email must be a string.').email('The email must be a valid email address.')
-      })
-      const sendResetLink = async(values, { resetForm }) => {
-        await resetLink(values)
-        resetForm({
-          values: {
-            email: undefined
-          }
-        })
-        let input_div = await document.getElementById('input_div')
-        if(input_div.classList.contains('is-filled')){
-          input_div.classList.remove('is-filled')
-        }
-        await document.getElementById('email').blur()
-        setTimeout(async() => {
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'none'
-          }
-        }, 15)
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'block'
-          }
-        }, 20)
+      } catch (error) {
+        console.error('Reset password error:', error);
+        emailError.value = error.response?.data?.errors?.email?.[0] ||
+            'Une erreur est survenue lors de l\'envoi de l\'email.';
+      } finally {
+        isLoading.value = false;
       }
-      const removeEmailError = async() => {
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'none'
-          }
-        }, 10)
-        setTimeout(async() => {
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removeErrors = async() => {
-        store.dispatch('removeMessage')
-        store.dispatch('removeEmailError')
-        await removeEmailError()
-      }
-      onUnmounted(
-        async() => {
-          store.dispatch('removeMessage')
-          store.dispatch('removeEmailError')
-         }
-      )
-      return{
-        schema,
-        sendResetLink,
-        removeEmailError,
-        removeErrors
-      }
-    }
+    };
+
+    const removeEmailError = () => {
+      emailError.value = '';
+    };
+
+    const removeErrors = () => {
+      emailError.value = '';
+    };
+
+    onUnmounted(() => {
+      emailError.value = '';
+    });
+
+    return {
+      schema,
+      userEmail,
+      isLoading,
+      email,
+      emailError,
+      sendResetLink,
+      removeEmailError,
+      removeErrors
+    };
   }
+};
 </script>
+
+<style scoped>
+@import '/resources/css/auth.css';
+
+.reset-header {
+  margin-bottom: 2rem;
+}
+
+.reset-header h2 {
+  font-size: 2rem;
+  color: #2D2D2D;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.reset-description {
+  color: #7E7E7E;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+}
+
+.support-text {
+  text-align: center;
+  margin-top: 1.75rem;
+  color: #000;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.support-text strong {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .reset-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .reset-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .support-text {
+    font-size: 0.875rem;
+    margin-top: 1.5rem;
+  }
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.btn-submit {
+  margin-top: 1rem;
+}
+
+/* Input focus state */
+.form-group input:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+</style>

@@ -1,211 +1,259 @@
 <template>
-	<main class="main-content position-relative max-height-vh-100  mt-0">
-    <section>
-      <div id="page_header" class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('/assets/img/illustrations/signup.webp'); background-size: cover;">
-              </div>
-            </div>
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
-              <router-link class="link-2" style="display: flex; align-items: center; justify-content: center; margin-top: 16px; margin-bottom: 16px;" :to="{name: 'Home'}">
-                <img :src="'/assets/img/logo-ct.webp'" style="display: inline; width: 32px; height: 32px; margin-right: 2.5px;">
-                <span id="unauthenticated_app_name" style="display: inline; text-transform: uppercase; font-weight: 600; font-size: 1rem; margin-left: 2.5px;">{{$store.getters.getAppName}}</span>
-              </router-link>
-              <div class="card card-plain" style="background-color: white; box-shadow: 0 0 20px 2px rgb(0 0 0 / 10%); margin-top: 25px; margin-bottom: 16px;">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                  <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0" style="margin-top: 0 !important;">RESET PASSWORD</h4>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <Form role="form" :validation-schema="schema" @submit="resetPassword" @invalid-submit="removeErrors">
-                    <Field type="hidden" name="token" v-model="$store.getters.getResetToken" />
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="email">Email</label>
-                      <Field id="email" name="email" type="text" class="form-control" @blur="removeEmailError" />
-                      <ErrorMessage id="email_error" class="error" name="email" />
-                      <span id="email_error_2" class="error" role="alert">{{$store.getters.getEmailError}}</span>
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="password">Password</label>
-                      <Field id="password" name="password" type="password" class="form-control" @blur="removePasswordError" />
-                      <ErrorMessage id="password_error" class="error" name="password" />
-                      <span id="password_error_2" class="error" role="alert">{{$store.getters.getPasswordError}}</span>
-                    </div>
-                    <div class="input-group input-group-outline mb-3">
-                      <label class="form-label" for="password-confirm">Confirm Password</label>
-                      <Field id="password-confirm" name="password_confirmation" type="password" class="form-control" />
-                    </div>
-                    <div class="form-check form-switch d-flex align-items-center mb-3">
-                      <input class="form-check-input" type="checkbox" @click="showPassword">
-                      <label class="form-check-label mb-0 ms-3">Show Password</label>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Reset</button>
-                    </div>
-                  </Form>
-                </div>
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  <p class="mb-2 text-sm mx-auto">
-                    Already have an account?
-                    <router-link class="text-primary text-gradient font-weight-bold" :to="{name: 'Login'}">SIGN IN</router-link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="auth-container">
+    <div class="mobile-nav">
+      <router-link to="/" class="logo">FOOdEatUp</router-link>
+    </div>
+
+    <div class="main-content">
+      <!-- Left side -->
+      <div class="left-side">
+        <router-link to="/" class="logo desktop-only">FOOdEatUp</router-link>
+        <div class="hero-content">
+          <h1>Lorem ipsum dolor sit amet,</h1>
+          <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <button class="btn-action">Voir plus</button>
         </div>
       </div>
-    </section>
-  </main>
+
+      <!-- Right side -->
+      <div class="right-side">
+        <div class="auth-form">
+          <!-- G Icon -->
+          <div class="g-icon">
+            <span>G</span>
+          </div>
+
+          <!-- Title and Description -->
+          <div class="reset-header">
+            <h2>Réinitialiser le mot de passe</h2>
+            <p class="reset-description">
+              Vous êtes presque prêt ! Il ne vous reste plus<br>
+              qu'à créer un nouveau mot de passe
+            </p>
+          </div>
+
+          <!-- Form -->
+          <Form @submit="resetPassword" :validation-schema="schema" @invalid-submit="removeErrors">
+            <Field type="hidden" name="token" :value="token" />
+            <Field type="hidden" name="email" :value="email" />
+
+            <div class="form-group">
+              <label>Mot de Passe</label>
+              <div class="password-field">
+                <Field
+                    name="password"
+                    :type="showPasswordField ? 'text' : 'password'"
+                    placeholder="**********"
+                    @blur="removePasswordError"
+                />
+                <button
+                    type="button"
+                    @click="togglePassword"
+                    class="toggle-password"
+                >
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.98766 3.54017C8.6198 3.37311 9.2911 3.27778 10 3.27778C15.7273 3.27778 19 9.5 19 9.5C19 9.5 18.2539 10.9185 16.8508 12.4009M3.1142 6.6362C1.73368 8.1051 1 9.5 1 9.5C1 9.5 4.27273 15.7222 10 15.7222C10.7219 15.7222 11.4047 15.6234 12.047 15.4506M9.55 12.1298C8.57424 11.9681 7.77595 11.2895 7.45364 10.3889M10.45 6.8702C11.5806 7.05755 12.473 7.93889 12.6627 9.05556M1.9 1.5L18.1 17.5"
+                          stroke="#C4BEB8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <ErrorMessage name="password" class="error-message" />
+            </div>
+
+            <div class="form-group">
+              <label>Confirmer le mot de passe</label>
+              <div class="password-field">
+                <Field
+                    name="password_confirmation"
+                    :type="showPasswordField ? 'text' : 'password'"
+                    placeholder="**********"
+                />
+                <button
+                    type="button"
+                    @click="togglePassword"
+                    class="toggle-password"
+                >
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.98766 3.54017C8.6198 3.37311 9.2911 3.27778 10 3.27778C15.7273 3.27778 19 9.5 19 9.5C19 9.5 18.2539 10.9185 16.8508 12.4009M3.1142 6.6362C1.73368 8.1051 1 9.5 1 9.5C1 9.5 4.27273 15.7222 10 15.7222C10.7219 15.7222 11.4047 15.6234 12.047 15.4506M9.55 12.1298C8.57424 11.9681 7.77595 11.2895 7.45364 10.3889M10.45 6.8702C11.5806 7.05755 12.473 7.93889 12.6627 9.05556M1.9 1.5L18.1 17.5"
+                          stroke="#C4BEB8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <ErrorMessage name="password_confirmation" class="error-message" />
+            </div>
+
+            <button
+                type="submit"
+                class="btn-submit"
+                :disabled="isLoading"
+                :class="{ 'loading': isLoading }"
+            >
+              {{ isLoading ? 'Validation...' : 'Valider le nouveau mot de passe' }}
+            </button>
+          </Form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-  import { onBeforeMount, onMounted, ref, onUnmounted } from 'vue';
-  import { useRoute } from 'vue-router';
-  import { useStore } from 'vuex';
-  import { Form, Field, ErrorMessage } from 'vee-validate';
-  import * as yup from 'yup';
-  import auth from '../../../../../js/composables/auth';
-  import materialDashboard from "../../../../../js/materialDashboard";
-  export default{
-  	components: {
-      Form,
-      Field,
-      ErrorMessage
-    },
-    setup(){
-      const { reset } = auth()
-      const store = useStore()
-    	onBeforeMount(
-    		async() => {
-          const route = useRoute()
-          const { checkAuthenticationOnResetPassword, setValue } = auth()
-          await checkAuthenticationOnResetPassword()
-          const url = ref({
-            token: route.params.token,
-            email: route.query.email
-          })
-    			await setValue(url)
-    		}
-    	)
-      onMounted(
-        async() => {
-          const { backgroundImage, usePerfectScrollbar, useInput } = materialDashboard()
-          backgroundImage()
-          usePerfectScrollbar()
-          useInput()
+import { ref, onBeforeMount, onUnmounted } from 'vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router';
+import axios from 'axios';
+import toastr from 'toastr';
+import auth from '@/composables/auth';
+
+export default {
+  name: 'ResetPasswordView',
+  components: {
+    Form,
+    Field,
+    ErrorMessage
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
+    const { reset } = auth();
+
+    const showPasswordField = ref(false);
+    const isLoading = ref(false);
+    const token = ref(route.params.token);
+    const email = ref(route.query.email);
+
+    const schema = yup.object({
+      token: yup.string().required(),
+      email: yup.string()
+          .required('L\'email est requis.')
+          .email('L\'email doit être une adresse email valide.')
+          .max(255, 'L\'email ne doit pas dépasser 255 caractères.'),
+      password: yup.string()
+          .required('Le mot de passe est requis.')
+          .min(8, 'Le mot de passe doit contenir au moins 8 caractères.'),
+      password_confirmation: yup.string()
+          .oneOf([yup.ref('password')], 'Les mots de passe doivent correspondre.')
+    });
+
+    onBeforeMount(async () => {
+      const { checkAuthenticationOnResetPassword, setValue } = auth();
+      await checkAuthenticationOnResetPassword();
+      await setValue({ token: token.value, email: email.value });
+    });
+
+    const resetPassword = async (values, { resetForm }) => {
+      try {
+        isLoading.value = true;
+        console.log("🟢 Sending request with values:", values);
+
+        // Make direct API call to your backend
+        const response = await axios.post('/api/reset-password-with-token', {
+          token: values.token,
+          email: values.email,
+          password: values.password,
+          password_confirmation: values.password_confirmation
+        });
+
+        console.log("🟢 Response received:", response);
+
+        if (response.data.success) {
+          store.dispatch('setMessage', 'Mot de passe réinitialisé avec succès');
+
+          // Clear any stored auth data
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('resetEmail');
+
+          // Show success message using toastr
+          toastr.success('Mot de passe réinitialisé avec succès. Vous pouvez maintenant vous connecter.');
+
+          // Redirect to login page
+          setTimeout(() => {
+            router.push({ name: 'Login' });
+          }, 1500); // Small delay to show the message
         }
-      )
-      const schema = yup.object({
-        email: yup.string().required('The email field is required.').typeError('The email must be a string.').email('The email must be a valid email address.'),
-        password: yup.string().required('The password field is required.').typeError('The password must be a string.').min(8, 'The password must be at least 8 characters.')
-      })
-      const showPassword = async() => {
-        var x = document.getElementById("password")
-        if (x.type === "password") {
-          x.type = "text"
-        } else {
-          x.type = "password"
-        }
-        var y = document.getElementById("password-confirm")
-        if (y.type === "password") {
-          y.type = "text"
-        } else {
-          y.type = "password"
-        }
+      } catch (error) {
+        console.error("❌ Reset password error:", error.response?.data || error);
+        const errorMessage = error.response?.data?.error ||
+            'Une erreur est survenue lors de la réinitialisation du mot de passe';
+        store.dispatch('setPasswordError', errorMessage);
+        toastr.error(errorMessage);
+      } finally {
+        isLoading.value = false;
       }
-      const resetPassword = async(values, { resetForm }) => {
-        await reset(values)
-        resetForm({
-          values: {
-            token: values.token,
-            email: undefined,
-            password: undefined,
-            password_confirmation: undefined
-          }
-        })
-        let input_divs = await document.getElementsByClassName('input-group')
-        for (let i = 0; i < input_divs.length; i++) {
-          if(input_divs[i].classList.contains('is-filled')){
-            input_divs[i].classList.remove('is-filled')
-          }
-        }
-        let inputs = await document.getElementsByClassName('form-control')
-        for (let i = 0; i < inputs.length; i++) {
-          inputs[i].blur()
-        }
-        setTimeout(async() => {
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'none'
-          }
-          let password_error = document.getElementById('password_error')
-          if(password_error){
-            password_error.style.display = 'none'
-          }
-        }, 15)
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'block'
-          }
-          let password_error_2 = document.getElementById('password_error_2')
-          if(password_error_2){
-            password_error_2.style.display = 'block'
-          }
-        }, 20)
-      }
-      const removeEmailError = async() => {
-        setTimeout(async() => {
-          let email_error_2 = document.getElementById('email_error_2')
-          if(email_error_2){
-            email_error_2.style.display = 'none'
-          }
-        }, 10)
-        setTimeout(async() => {
-          let email_error = document.getElementById('email_error')
-          if(email_error){
-            email_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removePasswordError = async() => {
-        setTimeout(async() => {
-          let password_error_2 = document.getElementById('password_error_2')
-          if(password_error_2){
-            password_error_2.style.display = 'none'
-          }
-        }, 10)
-        setTimeout(async() => {
-          let password_error = document.getElementById('password_error')
-          if(password_error){
-            password_error.style.display = 'block'
-          }
-        }, 15)
-      }
-      const removeErrors = async() => {
-        store.dispatch('removeEmailError')
-        store.dispatch('removePasswordError')
-        await removeEmailError()
-        await removePasswordError()
-      }
-      onUnmounted(
-        async() => {
-          store.dispatch('removeResetToken')
-          store.dispatch('removeEmailError')
-          store.dispatch('removePasswordError')
-        }
-      )
-      return{
-      	schema,
-        showPassword,
-      	resetPassword,
-        removeEmailError,
-        removePasswordError,
-        removeErrors
-      }
-    }
+    };
+    const togglePassword = () => {
+      showPasswordField.value = !showPasswordField.value;
+    };
+
+    const removePasswordError = () => {
+      store.dispatch('removePasswordError');
+    };
+
+    const removeErrors = () => {
+      store.dispatch('removePasswordError');
+    };
+
+    onUnmounted(() => {
+      store.dispatch('removeResetToken');
+      store.dispatch('removePasswordError');
+    });
+
+    return {
+      schema,
+      token,
+      email,
+      showPasswordField,
+      isLoading,
+      resetPassword,
+      togglePassword,
+      removePasswordError,
+      removeErrors
+    };
   }
+};
 </script>
+
+<style scoped>
+@import '/resources/css/auth.css';
+.reset-header {
+  margin-bottom: 2rem;
+}
+
+.reset-header h2 {
+  font-size: 2rem;
+  color: #2D2D2D;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.reset-description {
+  color: #7E7E7E;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .reset-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .reset-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Button specific styles */
+.btn-submit {
+  margin-top: 2rem;
+  font-weight: 600;
+}
+</style>

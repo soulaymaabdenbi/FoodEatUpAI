@@ -23,7 +23,7 @@ class AuthController extends Controller
         $data['name'] = $req->name;
         $data['email'] = $req->email;
         $data['phone'] = $req->phone;
-        $data['image'] = $req->image;
+
         $data['password'] = $req->password;
         if(count($users) >  0){
             if(isset($data['type']) && $data['type'] == 'Pro'){
@@ -111,6 +111,7 @@ class AuthController extends Controller
         AuditLogService::log('register', 'User registered');
         return response()->json([
             'type' => $auth_user->type,
+
             'token' => $token
         ],200);
     }

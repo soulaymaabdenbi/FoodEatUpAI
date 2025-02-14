@@ -3,49 +3,61 @@ import { useRoute, useRouter } from 'vue-router';
 export default function auth(){
 	const store = useStore()
   const route = useRoute()
-  const router = useRouter()
-  const checkAuthentication = async() => {
-    try{
-      let response = await axios.get('/api/check-authentication')
-      store.dispatch('setToken', response.data.token)
-      if(!localStorage.getItem('type')){
-        store.dispatch('setType', response.data.type)
+    const router = useRouter()
+  const checkAuthentication = async () => {
+    try {
+      // Check if we're on a public route to prevent unnecessary redirects
+      const publicRoutes = ['login', 'Register', 'verifyEmail'];
+
+      if (publicRoutes.includes(route.name)) {
+        return true;
       }
-      else{
-        if(localStorage.getItem('type') !== response.data.type){
-          store.dispatch('setType', response.data.type)
+
+      let response = await axios.get('/api/check-authentication');
+
+      // Always update token
+      store.dispatch('setToken', response.data.token);
+
+      // Handle user type
+      if (!localStorage.getItem('type') || localStorage.getItem('type') !== response.data.type) {
+        store.dispatch('setType', response.data.type);
+      }
+
+      // Handle verification status
+      if (response.data.verified === true) {
+        store.dispatch('setVerified', 1);
+
+        // Redirect to appropriate dashboard if not on a public route
+        const dashboardMap = {
+          'Admin': 'adminDashboard',
+          'User': 'userDashboard',
+          'Pro': 'proDashboard'
+        };
+
+        router.push({ name: dashboardMap[response.data.type] || 'userDashboard' });
+      } else {
+        // If not verified, redirect to verify email
+        router.push({ name: 'verifyEmail' });
+      }
+
+      return true;
+    } catch (error) {
+      // Handle unauthenticated error
+      if (error.response && error.response.status === 401) {
+        store.dispatch('removeToken');
+        store.dispatch('removeVerified');
+        store.dispatch('removeType');
+
+        // Only redirect to home if not on a public route
+        const publicRoutes = ['login', 'Register', 'verifyEmail'];
+        if (!publicRoutes.includes(route.name)) {
+          router.push({ name: 'Home' });
         }
       }
-      if(response.data.verified === true){
-        if(!localStorage.getItem('verified')){
-          store.dispatch('setVerified', 1)
-        }
-        if(response.data.type === 'Admin'){
-          router.push({name: 'adminDashboard'})
-        }
-        else if(response.data.type === 'User'){
-          router.push({name: 'userDashboard'})
-        }
-        else if(response.data.type === 'Pro'){
-          router.push({name: 'proDashboard'})
-        }
-      }
-      else{
-        router.push({name: 'verifyEmail'})
-      }
+
+      return false;
     }
-    catch(error){
-      if(error.response.status === 401 && error.response.data.message === 'Unauthenticated.'){
-        store.dispatch('removeToken')
-        store.dispatch('removeVerified')
-        store.dispatch('removeType')
-        if(route.name === 'verifyEmail'){
-          router.push({name: 'Home'})
-        }
-      }
-    }
-  }
-  const checkAuthenticationOnResetPassword = async() => {
+  };    const checkAuthenticationOnResetPassword = async() => {
     try{
       let response = await axios.get('/api/check-authentication')
       store.dispatch('setToken', response.data.token)

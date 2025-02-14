@@ -12,15 +12,16 @@ class ForgotPasswordController extends Controller
 {
     public function sendResetLinkEmail(Request $request)
     {
-        $response = $this->broker()->sendResetLink(
-            $this->credentials($request)
-        );
+        $request->validate(['email' => 'required|email']);
 
-        return $response == Password::RESET_LINK_SENT
-                    ? $this->sendResetLinkResponse($request, $response)
-                    : $this->sendResetLinkFailedResponse($request, $response);
+        $status = Password::sendResetLink($request->only('email'));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json(['message' => 'Un email de réinitialisation a été envoyé.'], 200);
+        } else {
+            return response()->json(['error' => 'Impossible d’envoyer l’email.'], 500);
+        }
     }
-
     protected function credentials(Request $request)
     {
         return $request->only('email');
